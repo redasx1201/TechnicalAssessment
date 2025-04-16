@@ -20,4 +20,4 @@ new_df['percentage'] = (new_df['count'] / new_df['total_population']) * 100
 # Reorder columns so they are like the given instructions
 finalCSV = new_df[['sample', 'total_population', 'population', 'count', 'percentage']]
 
-finalCSV.to_csv('cell-count-relative.csv', index=False)
+finalCSV.to_csv('cell_count_percentages.csv', index=False)
