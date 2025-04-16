@@ -1,0 +1,44 @@
+1.
+CREATE TABLE Projects (
+    project_name VARCHAR(n) PRIMARY KEY,
+    description VARCHAR(n)
+);
+
+CREATE TABLE Samples (
+    sample_name VARCHAR(n) PRIMARY KEY,
+    project_name VARCHAR(n) REFERENCES Projects(project_name),
+    -- TRUE = responder, FALSE = non-responder
+    responder_status BOOLEAN,
+    collection_date DATE
+);
+
+CREATE TABLE Subjects (
+    subject_id VARCHAR(n) PRIMARY KEY,
+    sex VARCHAR(n),
+    condition VARCHAR(n),
+    treatment VARCHAR(n)
+);
+
+CREATE TABLE SampleCounts (
+    sample_name VARCHAR(n) REFERENCES Samples(sample_name),
+    subject_id VARCHAR(n) REFERENCES Subjects(subject_id),
+    cell_type_name VARCHAR(n) NOT NULL,
+    count INTEGER NOT NULL,
+    PRIMARY KEY (sample_name, cell_type_name)
+);
+
+2. Some advantages of storing data like cell-count.csv in a database is that databases can have fast querying. This
+makes it so that it is easy to filter or sort through all the data. Also when analyzing specific subsets of data such as
+identifying samples with high CD4 T cell levels or comparing the averages. This can streamline the analysis if we add
+another table that includes the percentages I had found using the python code.
+
+Databases can support better structure through separating related data into tables. Built-in constraints make sure that
+there is data integrity, such as preventing duplicate IDs or invalid data. Databases are also more scalable which would
+be beneficial in handling large datasets.
+
+3.
+SELECT project_name, COUNT(DISTINCT sample_name) AS subject_count
+FROM Samples
+GROUP BY project_name;
+
+4.
