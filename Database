@@ -9,7 +9,8 @@ CREATE TABLE Samples (
     project_name VARCHAR(n) REFERENCES Projects(project_name),
     -- TRUE = responder, FALSE = non-responder
     responder_status BOOLEAN,
-    collection_date DATE
+    collection_date DATE,
+    time_from_treatment_start INTEGER
 );
 
 CREATE TABLE Subjects (
@@ -42,3 +43,41 @@ FROM Samples
 GROUP BY project_name;
 
 4.
+SELECT sample.sample_name
+FROM Samples sample
+JOIN SampleCounts samplecount ON sample.sample_name = samplecount.sample_name
+JOIN Subjects subject ON samplecount.subject_id = subject.subject_id
+WHERE subject.condition = 'melanoma'
+AND subject.treatment = 'tr1'
+AND sample.time_from_treatment_start = 0;
+
+5.
+a.
+SELECT sample.project_name, COUNT(*) AS sample_count
+FROM Samples sample
+JOIN SampleCounts samplecounts ON sample.sample_name = samplecounts.sample_name
+JOIN Subjects subject ON samplecounts.subject_id = subject.subject_id
+WHERE subject.condition = 'melanoma'
+  AND subject.treatment = 'tr1'
+  AND sample.time_from_treatment_start = 0
+GROUP BY sample.project_name;
+
+b.
+SELECT sample.responder_status, COUNT(*) AS count
+FROM Samples sample
+JOIN SampleCounts samplecounts ON sample.sample_name = samplecounts.sample_name
+JOIN Subjects subject ON samplecounts.subject_id = subject.subject_id
+WHERE subject.condition = 'melanoma'
+  AND subject.treatment = 'tr1'
+  AND sample.time_from_treatment_start = 0
+GROUP BY sample.responder_status;
+
+c.
+SELECT subject.sex, COUNT(*) AS count
+FROM Samples sample
+JOIN SampleCounts samplecounts ON sample.sample_name = samplecounts.sample_name
+JOIN Subjects subject ON samplecounts.subject_id = subject.subject_id
+WHERE subject.condition = 'melanoma'
+  AND subject.treatment = 'tr1'
+  AND sample.time_from_treatment_start = 0
+GROUP BY subject.sex;
